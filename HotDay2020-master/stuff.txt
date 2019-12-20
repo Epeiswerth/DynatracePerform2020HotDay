@@ -1,0 +1,208 @@
+﻿ApiToken: <YOUR APITOKEN>
+dtTenant: <YOUR TENENT URL>
+EasyTravelHOST: <YOUR EASYTRAVEL HOST IP>
+APIToken: YmdNy5XMSES0VS46pD_WY
+Jenkins URL: http://54.149.158.230:8080
+
+CLONE CLASS MATERIALS FROM GITHUB
+https://github.com/kunzna/HotDay2019/
+
+DEPLOY JENKINS AS DOCKER
+cd /opt
+git clone https://github.com/kunzna/HotDay2019.git
+cd /opt/HotDay2019/jenkins/
+./deployjenkins.sh
+docker ps
+
+LOGIN TO JENKINS
+Navigate to http://<YOUR JENKINS HOST IP>:8080
+
+"RELAX" CSP RULES FOR JENKINS TO CREATE DYNAMIC HTML DASHBOARDS
+System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+
+CHANGE THE NAME AND KEY PERFORMANCE METRICS
+EasyTravel-www
+
+CREATE CONVERSION GOALS
+Successful Bookings - open final Page
+/orange-booking-finish.jsf
+
+Successful Bookings - click on Finish
+click on "Finish"
+
+CONFIGURE USERNAME CAPTURE
+#loginForm\3a j_idt39
+Hello (.*)!
+
+CONFIGURE SESSION PROPERTY RULE FOR MEMBERSHIP STATUS
+membershipstatus
+#loginForm\3a j_idt42
+(.*) status!
+
+CREATE THE SESSION ATTRIBUTE FOR BOOKING TOTAL
+bookingtotal
+#iceform\3a j_idt77-11-1
+Booking Total
+..(.*)
+
+CREATE THE SESSION ATTRIBUTE FOR TRIP DESTINATION
+destination
+#iceform\3a j_idt77-3-1
+Trip Destination
+
+DEFINE AN APPLICATION TAG FOR EASYTRAVEL-WWW
+easytravel
+
+ADD THE CHECKDESTINATION SERVICE
+CheckDestination
+com.dynatrace.easytravel.business.backend.jar easytravel-*-x*
+com.dynatrace.easytravel.business.webservice.JourneyService
+checkDestination
+
+DEFINE CREDIT CARD VERIFICATION CUSTOM SERVICE
+Credit Card Verification
+com.dynatrace.easytravel.business.backend.jar easytravel-*-x*
+com.dynatrace.easytravel.ipc.SocketNativeApplication
+sendAndReceive
+
+CREATE REQUEST ATTRIBUTES FOR LOADTEST SOURCEID HEADER PARAMETERS
+LoadTest_SourceID
+x-dynatrace-test
+SI=
+;
+
+CREATE REQUEST ATTRIBUTES FOR LOADTEST SCRIPT NAME HEADER PARAMETERS
+LoadTest_LoadScriptName 
+x-dynatrace-test
+LSN=
+;
+
+CREATE REQUEST ATTRIBUTE FOR BOOKING AMOUNT
+Amount
+amount
+
+CREATE REQUEST ATTRIBUTE FOR TRIP DESTINATION
+Destination
+destination
+
+CREATE REQUEST ATTRIBUTE FOR USERNAME
+Username
+userName
+
+USER SESSION QUERY EXAMPLES
+SELECT DATETIME(starttime, 'MM:HH:mm', '30m'),AVG(usersession.doubleProperties.bookingtotal) FROM usersession WHERE usersession.doubleProperties.bookingtotal IS NOT NULL GROUP BY DATETIME(starttime, 'MM:HH:mm', '30m')
+SELECT userId, AVG(usersession.doubleProperties.bookingtotal) FROM usersession WHERE usersession.doubleProperties.bookingtotal IS NOT NULL GROUP BY userId ORDER BY avg(usersession.doubleProperties.bookingtotal) DESC
+SELECT usersession.stringProperties.membershipstatus, AVG(usersession.doubleProperties.bookingtotal) FROM usersession WHERE usersession.stringProperties.membershipstatus IS NOT NULL GROUP BY usersession.stringProperties.membershipstatus
+SELECT usersession.stringProperties.destination, AVG(usersession.doubleProperties.bookingtotal) FROM usersession WHERE usersession.stringProperties.destination IS NOT NULL GROUP BY usersession.stringProperties.destination
+SELECT COUNT(*) FROM usersession WHERE useraction.name = "Loading of page /orange.jsf"
+SELECT COUNT(*) FROM usersession WHERE useraction.name = "click on ""Login"" on page /"
+SELECT COUNT(*) FROM usersession WHERE useraction.name = "click on ""Search"" on page /orange.jsf"
+SELECT COUNT(*) FROM usersession WHERE useraction.name = "click on ""Book Now"""
+SELECT COUNT(*) FROM usersession WHERE useraction.name = "click on ""Finish"""
+
+DEFINE THE AUTO TAG FOR SERVICES
+Service
+{Service:DetectedName}
+easytravel
+
+CREATE ANOTHER AUTOMATIC TAG FOR APPLICATIONNAME
+ApplicationName
+{ProcessGroup:Environment:APPLICATION_NAME}
+easytravel
+
+CREATE AUTOMATIC TAG FOR TIERNAME
+TierName
+{ProcessGroup:Environment:APPLICATION_TIER}
+easytravel
+
+DEFINE BUSINESS USER MANAGEMENT ZONE
+Easytravel Business Users
+EasyTravel-www
+
+CREATE CUSTOM EVENTS WITH REST API
+{"eventType": "CUSTOM_ANNOTATION",
+  "attachRules": {
+    "entityIds": [
+      "HOST-70E9E7442BB29451"
+    ]
+  },
+  "source": "OpsControl",
+  "annotationType": "defect",
+  "annotationDescription": "The coffee machine is broken"
+}
+
+{"eventType": "CUSTOM_INFO",
+  "attachRules": {
+    "tagRule": [
+      {
+        "meTypes": [
+          "SERVICE"
+        ],
+        "tags": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "ApplicationName",
+            "value": "easyTravel"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "Service",
+            "value": "AuthenticationService"
+          }
+        ]
+      },
+      {
+        "meTypes": [
+          "PROCESS_GROUP_INSTANCE"
+        ],
+        "tags": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "ApplicationName",
+            "value": "easyTravel"
+          },
+          {
+            "context": "CONTEXTLESS",
+            "key": "ApplicationTier",
+            "value": "Java_Backend"
+          }
+        ]
+      },
+      {
+        "meTypes": [
+          "APPLICATION"
+        ],
+        "tags": [
+          {
+            "context": "CONTEXTLESS",
+            "key": "easytravel"
+          }
+        ]
+      }
+    ]
+  },
+  "source": "HOT DAY Tag Example",
+  "description": "HOT DAY Tag Example",
+  "title": "HOT DAY Tag Example"
+}
+
+ENABLE THE USER SESSION EXPORT TO ELASTICSEARCH
+http://<YOUR Jenkins HOST IP>:9200/_bulk
+usersession.export
+
+OPEN UP YOUR KIBANA INSTANCE IN A BROWSER
+http://<YOUR Jenkins IP>:5601
+
+CREATE AN INDEX PATTERN FOR DYNATRACE RUM SESSION DATA
+usersession.export
+
+BUILD A REST CALL IN THE API EXPLORER
+com.dynatrace.builtin:app.apdex
+easytravel
+
+OPEN EXCEL AND CREATE A NEW QUERY FROM WEB
+TimeSpanEPOCH
+Apdex
+#datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [TimeSpanEPOCH]/1000)
+
+
