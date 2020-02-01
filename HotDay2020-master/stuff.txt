@@ -1,24 +1,66 @@
 ﻿ApiToken: <YOUR APITOKEN>
 dtTenant: <YOUR TENENT URL>
 EasyTravelHOST: <YOUR EASYTRAVEL HOST IP>
-APIToken: YmdNy5XMSES0VS46pD_WY
-Jenkins URL: http://54.149.158.230:8080
+
 
 CLONE CLASS MATERIALS FROM GITHUB
-https://github.com/kunzna/HotDay2019/
+https://github.com/Epeiswerth/DynatracePerform2020HotDay/
 
-DEPLOY JENKINS AS DOCKER
+Deploy EasyTravel - In the command line, change to root user and change dir to /opt,  type:
+sudo su
 cd /opt
-git clone https://github.com/kunzna/HotDay2019.git
-cd /opt/HotDay2019/jenkins/
-./deployjenkins.sh
-docker ps
+git clone https://github.com/Epeiswerth/DynatracePerform2020HotDay.git
+cd /opt/DynatracePerform2020HotDay/HotDay2020-master
+./easytravelinitialdeployment.sh
 
-LOGIN TO JENKINS
-Navigate to http://<YOUR JENKINS HOST IP>:8080
 
-"RELAX" CSP RULES FOR JENKINS TO CREATE DYNAMIC HTML DASHBOARDS
-System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+CHANGE ACTIVEGATE CUSTOM.PROPERTIES FILE TO CONNECT TO AWS
+$ Sudo su
+$ cd /var/lib/dynatrace/gateway/config
+$ vi custom.properties
+Press “i” to edit the file
+In the file paste the lines:
+[vertical.topology]
+use_aws_proxy_role = false
+
+[aws_monitoring]
+aws_monitoring_enabled = true
+
+
+Press “escape” to leave the editor
+Type to save the changes to the file   :wq!
+
+AWS ROLE ACCESS
+Connection role: dtu-perform-s12-monitoring-role
+aws account ID: <<Provided in class>>
+
+GCP K8S API INTEGRATION
+url address: https://https://<<provided in class>>/
+Bearer Token:
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tNWN2czQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjA2ODYyMDFhLTQyZGYtMTFlYS1hZDg0LTQyMDEwYTgwMDE2YSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.EvqP_i6Z4kkkB3abFPCgWmlCCl2Iu6c5LACWsdOkyMvvi7952PvthhqVNkwNJyw3FVrB04UYFotW3m-rGaaStwYXNNOq_bbcPdrOuOJl3wXxmS_4q9MvJYHmyJ83Bx7nT3r8KK7PzR_54vPFJDFMSsSzieJJoFTGSWiAQVpRuFVmvQAqt818cC0VWwIeSd3yk8Ur5pPiwf5PoAYIAJreC-K518WG073xm8T-CoE3C8g8FcBr5rBrRjTcqgHyckUGFJKsTH9MvRYYB8lnH-6BwYQOF3VS-frHqSmDlHEgjPyJMCAmvrEJERjvBpRx-F2LKgB5nAxY1nRqlTBY-SkKyw
+
+
+CHANGE THE CUSTOM.PROPERTIES FILE IN THE ACTIVEGATE:
+$ Sudo su
+$ cd /var/lib/dynatrace/gateway/config
+$ vi custom.properties
+Press “i” to edit the file
+In the file paste the lines:
+[http.client.external]
+hostname-verification = false
+certificate-validation = false
+
+Press “escape” to leave the editor
+Type to save the changes to the file   :wq!
+
+RESTART ACTIVEGATE
+$ cd /opt/dynatrace/gateway/
+$ service dynatracegateway stop
+$ service dynatracegateway start
+$ service dynatracegateway status
+
+
+
 
 CHANGE THE NAME AND KEY PERFORMANCE METRICS
 EasyTravel-www
@@ -185,24 +227,3 @@ CREATE CUSTOM EVENTS WITH REST API
   "description": "HOT DAY Tag Example",
   "title": "HOT DAY Tag Example"
 }
-
-ENABLE THE USER SESSION EXPORT TO ELASTICSEARCH
-http://<YOUR Jenkins HOST IP>:9200/_bulk
-usersession.export
-
-OPEN UP YOUR KIBANA INSTANCE IN A BROWSER
-http://<YOUR Jenkins IP>:5601
-
-CREATE AN INDEX PATTERN FOR DYNATRACE RUM SESSION DATA
-usersession.export
-
-BUILD A REST CALL IN THE API EXPLORER
-com.dynatrace.builtin:app.apdex
-easytravel
-
-OPEN EXCEL AND CREATE A NEW QUERY FROM WEB
-TimeSpanEPOCH
-Apdex
-#datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [TimeSpanEPOCH]/1000)
-
-
