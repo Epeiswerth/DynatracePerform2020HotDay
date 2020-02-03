@@ -30,14 +30,8 @@ aws_monitoring_enabled = true
 Press “escape” to leave the editor
 Type to save the changes to the file   :wq!
 
-AWS ROLE ACCESS
-Connection role: dtu-perform-s12-monitoring-role
-aws account ID: <<Provided in class>>
-
-GCP K8S API INTEGRATION
-url address: https://https://<<provided in class>>/
-Bearer Token:
-eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tNWN2czQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjA2ODYyMDFhLTQyZGYtMTFlYS1hZDg0LTQyMDEwYTgwMDE2YSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.EvqP_i6Z4kkkB3abFPCgWmlCCl2Iu6c5LACWsdOkyMvvi7952PvthhqVNkwNJyw3FVrB04UYFotW3m-rGaaStwYXNNOq_bbcPdrOuOJl3wXxmS_4q9MvJYHmyJ83Bx7nT3r8KK7PzR_54vPFJDFMSsSzieJJoFTGSWiAQVpRuFVmvQAqt818cC0VWwIeSd3yk8Ur5pPiwf5PoAYIAJreC-K518WG073xm8T-CoE3C8g8FcBr5rBrRjTcqgHyckUGFJKsTH9MvRYYB8lnH-6BwYQOF3VS-frHqSmDlHEgjPyJMCAmvrEJERjvBpRx-F2LKgB5nAxY1nRqlTBY-SkKyw
+AWS ROLE ACCESS/ GCP Integration/ Azure Integration
+http://dt-hotday.azurewebsites.net/training/
 
 
 CHANGE THE CUSTOM.PROPERTIES FILE IN THE ACTIVEGATE:
